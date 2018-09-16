@@ -15,7 +15,7 @@ protocol ListDetailViewControllerDelegate: class {
     func listDetailViewController(_ controller: ListDetailViewController, didFinishEditing checklist: Checklist)
 }
 
-class ListDetailViewController: UITableViewController, UITextFieldDelegate, IconPickerViewControllerDelegate {
+class ListDetailViewController: UITableViewController {
     @IBOutlet weak var textField: UITextField!
     @IBOutlet weak var doneBarButton: UIBarButtonItem!
     @IBOutlet weak var iconImageView: UIImageView!
@@ -74,8 +74,10 @@ class ListDetailViewController: UITableViewController, UITextFieldDelegate, Icon
             return nil
         }
     }
-    
+}
     // MARK:- UITextField Delegates
+    extension ListDetailViewController :UITextFieldDelegate {
+        
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         
         let oldText = textField.text!
@@ -84,8 +86,10 @@ class ListDetailViewController: UITableViewController, UITextFieldDelegate, Icon
         doneBarButton.isEnabled = !newText.isEmpty
         return true
     }
-    
+}
     // MARK:- Icon Picker View Controller Delegate
+    extension ListDetailViewController :IconPickerViewControllerDelegate {
+        
     func iconPicker(_ picker: IconPickerViewController,
                     didPick iconName: String) {
         self.iconName = iconName

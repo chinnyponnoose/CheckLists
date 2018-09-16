@@ -15,7 +15,7 @@ protocol ItemDetailViewControllerDelegate: class {
     func itemDetailViewController(_ controller: ItemDetailViewController, didFinishEditing item: ChecklistItem)
 }
 
-class ItemDetailViewController: UITableViewController, UITextFieldDelegate {
+class ItemDetailViewController: UITableViewController {
     @IBOutlet weak var textField: UITextField!
     @IBOutlet weak var doneBarButton: UIBarButtonItem!
     @IBOutlet weak var shouldRemindSwitch: UISwitch!
@@ -27,6 +27,7 @@ class ItemDetailViewController: UITableViewController, UITextFieldDelegate {
     var itemToEdit: ChecklistItem?
     var dueDate = Date()
     var datePickerVisible = false
+    private let tableRowHeight = 217
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -87,7 +88,6 @@ class ItemDetailViewController: UITableViewController, UITextFieldDelegate {
         updateDueDateLabel()
     }
     
-    // MARK:- Prviate Methods
     func updateDueDateLabel() {
         let formatter = DateFormatter()
         formatter.dateStyle = .medium
@@ -141,7 +141,7 @@ class ItemDetailViewController: UITableViewController, UITextFieldDelegate {
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         if indexPath.section == 1 && indexPath.row == 2 {
-            return 217
+            return CGFloat(tableRowHeight)
         } else {
             return super.tableView(tableView, heightForRowAt: indexPath)
         }
@@ -182,8 +182,10 @@ class ItemDetailViewController: UITableViewController, UITextFieldDelegate {
             }
         }
     }
-    
+}
     // MARK:- UITextField Delegates
+    extension ItemDetailViewController :UITextFieldDelegate {
+        
     func textField(_ textField: UITextField,
                    shouldChangeCharactersIn range: NSRange,
                    replacementString string: String) -> Bool {

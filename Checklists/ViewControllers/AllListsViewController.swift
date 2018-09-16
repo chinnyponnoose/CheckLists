@@ -8,12 +8,8 @@
 
 import UIKit
 
-class AllListsViewController: UITableViewController, ListDetailViewControllerDelegate, UINavigationControllerDelegate {
+class AllListsViewController: UITableViewController {
     var dataModel: DataModel!
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-    }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -22,19 +18,12 @@ class AllListsViewController: UITableViewController, ListDetailViewControllerDel
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        
         navigationController?.delegate = self
-        
         let index = dataModel.indexOfSelectedChecklist
         if index >= 0 && index < dataModel.lists.count {
             let checklist = dataModel.lists[index]
             performSegue(withIdentifier: SegueIdentifiers.ShowChecklist.rawValue, sender: checklist)
         }
-    }
-    
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
     }
     
     // MARK:- Navigation
@@ -48,7 +37,6 @@ class AllListsViewController: UITableViewController, ListDetailViewControllerDel
         }
     }
     
-    // MARK:- Private Methods
     func makeCell(for tableView: UITableView) -> UITableViewCell {
         let cellIdentifier = CellIdentifiers.AllList.rawValue
         if let cell =
@@ -104,8 +92,11 @@ class AllListsViewController: UITableViewController, ListDetailViewControllerDel
         controller.checklistToEdit = checklist
         navigationController?.pushViewController(controller, animated: true)
     }
+}
+// MARK:- List Detail View Controller Delegates
+
+extension AllListsViewController:ListDetailViewControllerDelegate {
     
-    // MARK:- List Detail View Controller Delegates
     func listDetailViewControllerDidCancel(_ controller: ListDetailViewController) {
         navigationController?.popViewController(animated: true)
     }
@@ -123,9 +114,14 @@ class AllListsViewController: UITableViewController, ListDetailViewControllerDel
         navigationController?.popViewController(animated: true)
     }
     
-    // MARK:- UINavigationController Delegate
+
+}
+
+// MARK:- UINavigationController Delegate
+
+extension AllListsViewController:UINavigationControllerDelegate {
+    
     func navigationController(_ navigationController: UINavigationController, willShow viewController: UIViewController, animated: Bool) {
-        // Was the back button tapped?
         if viewController === self {
             dataModel.indexOfSelectedChecklist = -1
         }

@@ -8,17 +8,19 @@
 
 import UIKit
 
-class ChecklistViewController: UITableViewController, ItemDetailViewControllerDelegate {
-    var checklist: Checklist!
+class ChecklistCell :UITableViewCell {
+
+    @IBOutlet weak var listNameLabel: UILabel!
+    @IBOutlet weak var checkLabel: UILabel!
     
+}
+
+class ChecklistViewController: UITableViewController {
+    var checklist: Checklist!
+
     override func viewDidLoad() {
         super.viewDidLoad()
         title = checklist.name
-    }
-    
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
     }
     
     // MARK:- Navigation
@@ -35,24 +37,20 @@ class ChecklistViewController: UITableViewController, ItemDetailViewControllerDe
         }
     }
     
-    // MARK:- Actions
-    
-    // MARK:- Private Methods
-    func configureCheckmark(for cell: UITableViewCell,
+    func configureCheckmark(for cell: ChecklistCell,
                             with item: ChecklistItem) {
-        let label = cell.viewWithTag(1001) as! UILabel
-        label.textColor = view.tintColor
+        
+        cell.checkLabel.textColor = view.tintColor
         if item.checked {
-            label.text = "√"
+            cell.checkLabel.text = "√"
         } else {
-            label.text = ""
+            cell.checkLabel.text = ""
         }
     }
     
-    func configureText(for cell: UITableViewCell,
+    func configureText(for cell: ChecklistCell,
                        with item: ChecklistItem) {
-        let label = cell.viewWithTag(1000) as! UILabel
-        label.text = item.text
+        cell.listNameLabel.text = item.text
     }
     
     // MARK:- TableView Delegates
@@ -63,7 +61,7 @@ class ChecklistViewController: UITableViewController, ItemDetailViewControllerDe
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cell = tableView.dequeueReusableCell(
-            withIdentifier: CellIdentifiers.CheckList.rawValue, for: indexPath)
+            withIdentifier: CellIdentifiers.CheckList.rawValue, for: indexPath) as! ChecklistCell
         let item = checklist.items[indexPath.row]
         configureText(for: cell, with: item)
         configureCheckmark(for: cell, with: item)
@@ -71,7 +69,7 @@ class ChecklistViewController: UITableViewController, ItemDetailViewControllerDe
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if let cell = tableView.cellForRow(at: indexPath) {
+        if let cell = tableView.cellForRow(at: indexPath)  as? ChecklistCell{
             let item = checklist.items[indexPath.row]
             item.toggleChecked()
             configureCheckmark(for: cell, with: item)
@@ -84,8 +82,13 @@ class ChecklistViewController: UITableViewController, ItemDetailViewControllerDe
         let indexPaths = [indexPath]
         tableView.deleteRows(at: indexPaths, with: .automatic)
     }
-    
-    // MARK:- AddItemViewController Delegates
+}
+
+
+// MARK:- ItemDetailViewController Delegates
+
+extension ChecklistViewController:ItemDetailViewControllerDelegate {
+
     func itemDetailViewControllerDidCancel(_ controller: ItemDetailViewController) {
         navigationController?.popViewController(animated:true)
     }
@@ -103,7 +106,7 @@ class ChecklistViewController: UITableViewController, ItemDetailViewControllerDe
     func itemDetailViewController(_ controller: ItemDetailViewController, didFinishEditing item: ChecklistItem) {
         if let index = checklist.items.index(of: item) {
             let indexPath = IndexPath(row: index, section: 0)
-            if let cell = tableView.cellForRow(at: indexPath) {
+            if let cell = tableView.cellForRow(at: indexPath) as? ChecklistCell{
                 configureText(for: cell, with: item)
             }
         }
