@@ -24,7 +24,7 @@ class ChecklistItem : NSObject,Codable {
     deinit {
         removeNotification()
     }
-
+    
     func toggleChecked() {
         checked = !checked
     }

@@ -41,7 +41,7 @@ class ListDetailViewController: UITableViewController {
         super.viewWillAppear(animated)
         textField.becomeFirstResponder()
     }
-
+    
     
     // MARK:- Actions
     @IBAction func cancel() {
@@ -49,6 +49,7 @@ class ListDetailViewController: UITableViewController {
     }
     
     @IBAction func done() {
+        
         if let checklist = checklistToEdit {
             checklist.name = textField.text!
             checklist.iconName = iconName
@@ -61,16 +62,14 @@ class ListDetailViewController: UITableViewController {
     
     // MARK:- TableView Delegates
     override func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
-        if indexPath.section == 1 {
-            return indexPath
-        } else {
-            return nil
-        }
+        
+        return indexPath.section == 1 ? indexPath : nil
+        
     }
 }
-    // MARK:- UITextField Delegates
-    extension ListDetailViewController :UITextFieldDelegate {
-        
+// MARK:- UITextField Delegates
+extension ListDetailViewController :UITextFieldDelegate {
+    
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         
         let oldText = textField.text!
@@ -80,9 +79,9 @@ class ListDetailViewController: UITableViewController {
         return true
     }
 }
-    // MARK:- Icon Picker View Controller Delegate
-    extension ListDetailViewController :IconPickerViewControllerDelegate {
-        
+// MARK:- Icon Picker View Controller Delegate
+extension ListDetailViewController :IconPickerViewControllerDelegate {
+    
     func iconPicker(_ picker: IconPickerViewController,
                     didPick iconName: String) {
         self.iconName = iconName
@@ -92,11 +91,11 @@ class ListDetailViewController: UITableViewController {
 }
 
 extension ListDetailViewController {
-// MARK:- Navigation
-override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-    if segue.identifier == SegueIdentifiers.PickItem.rawValue {
-        let controller = segue.destination as? IconPickerViewController
-        controller?.delegate = self
+    // MARK:- Navigation
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == SegueIdentifiers.PickItem {
+            let controller = segue.destination as? IconPickerViewController
+            controller?.delegate = self
+        }
     }
-}
 }

@@ -8,27 +8,27 @@
 
 import Foundation
 
-enum SegueIdentifiers: String {
-    case ShowChecklist = "ShowChecklist"
-    case AddChecklist =  "AddChecklist"
-    case AddItem = "AddItem"
-    case EditItem = "EditItem"
-    case PickItem = "PickIcon"
+enum SegueIdentifiers {
+    static let ShowChecklist = "ShowChecklist"
+    static let AddChecklist =  "AddChecklist"
+    static let AddItem = "AddItem"
+    static let EditItem = "EditItem"
+    static let PickItem = "PickIcon"
 }
 
-enum CellIdentifiers: String {
-    case AllList = "Cell"
-    case CheckList = "ChecklistItem"
-    case IconCell  = "IconCell"
+enum CellIdentifiers {
+    static let AllList = "Cell"
+    static let CheckList = "ChecklistItem"
+    static let IconCell  = "IconCell"
 }
 
-enum Subtitle:String {
-    case AllDone = "All Done!"
-    case None =  "(No Items)"
+enum Subtitle {
+    static let AllDone = "All Done!"
+    static let None =  "(No Items)"
 }
 
-enum ControllerIdentifier :String {
-    case ListDetail = "ListDetailViewController"
+enum ControllerIdentifier {
+    static let ListDetail = "ListDetailViewController"
 }
 
 

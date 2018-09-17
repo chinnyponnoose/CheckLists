@@ -28,9 +28,11 @@ class ItemDetailViewController: UITableViewController {
     var dueDate = Date()
     var datePickerVisible = false
     fileprivate let tableRowHeight = 217
+    //use private in swift 4.3 above
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         if let item = itemToEdit {
             title = "Edit Item"
             textField.text = item.text
@@ -38,6 +40,7 @@ class ItemDetailViewController: UITableViewController {
             shouldRemindSwitch.isOn = item.shouldRemind
             dueDate = item.dueDate
         }
+        
         updateDueDateLabel()
     }
     
@@ -52,6 +55,7 @@ class ItemDetailViewController: UITableViewController {
     }
     
     @IBAction func done() {
+        
         if let item = itemToEdit {
             item.text = textField.text!
             
@@ -78,7 +82,6 @@ class ItemDetailViewController: UITableViewController {
             let center = UNUserNotificationCenter.current()
             center.requestAuthorization(options: [.alert, .sound]) {
                 granted, error in
-                // do nothing
             }
         }
     }
@@ -114,6 +117,7 @@ class ItemDetailViewController: UITableViewController {
     }
     
     func hideDatePicker() {
+        
         if datePickerVisible {
             datePickerVisible = false
             
@@ -130,25 +134,22 @@ class ItemDetailViewController: UITableViewController {
         }
     }
 }
-    extension ItemDetailViewController {
+extension ItemDetailViewController {
     // MARK:- TableView Delegates
+    
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if section == 1 && datePickerVisible {
-            return 3
-        } else {
-            return super.tableView(tableView, numberOfRowsInSection: section)
-        }
+        
+        return (section == 1 && datePickerVisible ) ? 3  : super.tableView(tableView, numberOfRowsInSection: section)
     }
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        if indexPath.section == 1 && indexPath.row == 2 {
-            return CGFloat(tableRowHeight)
-        } else {
-            return super.tableView(tableView, heightForRowAt: indexPath)
-        }
+        
+        return (indexPath.section == 1 && indexPath.row == 2) ? CGFloat(tableRowHeight) : super.tableView(tableView, heightForRowAt: indexPath)
+        
     }
     
     override func tableView(_ tableView: UITableView, indentationLevelForRowAt indexPath: IndexPath) -> Int {
+        
         var newIndexPath = indexPath
         if indexPath.section == 1 && indexPath.row == 2 {
             newIndexPath = IndexPath(row: 0, section: indexPath.section)
@@ -157,37 +158,30 @@ class ItemDetailViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        if indexPath.section == 1 && indexPath.row == 2 {
-            return datePickerCell
-        } else {
-            return super.tableView(tableView, cellForRowAt: indexPath)
-        }
+        
+        return (indexPath.section == 1 && indexPath.row == 2) ? datePickerCell : super.tableView(tableView, cellForRowAt: indexPath)
+        
     }
     
     override func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
-        if indexPath.section == 1 && indexPath.row == 1 {
-            return indexPath
-        } else {
-            return nil
-        }
+        
+        return (indexPath.section == 1 && indexPath.row == 1) ? indexPath : nil
+        
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
         tableView.deselectRow(at: indexPath, animated: true)
         textField.resignFirstResponder()
         if indexPath.section == 1 && indexPath.row == 1 {
-            if !datePickerVisible {
-                showDatePicker()
-            } else {
-                hideDatePicker()
-            }
+            !datePickerVisible ? showDatePicker() : hideDatePicker()
         }
     }
 }
 
-    extension ItemDetailViewController :UITextFieldDelegate {
-       // MARK:- UITextField Delegates
-        
+extension ItemDetailViewController :UITextFieldDelegate {
+    // MARK:- UITextField Delegates
+    
     func textField(_ textField: UITextField,
                    shouldChangeCharactersIn range: NSRange,
                    replacementString string: String) -> Bool {

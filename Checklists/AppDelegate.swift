@@ -14,7 +14,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
     let dataModel = DataModel()
 
-
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         
         let navigationController = window?.rootViewController
@@ -23,6 +22,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             as? AllListsViewController
         controller?.dataModel = dataModel
         return true
+        
     }
 
     func applicationWillResignActive(_ application: UIApplication) {

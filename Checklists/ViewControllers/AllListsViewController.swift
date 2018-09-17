@@ -9,20 +9,27 @@
 import UIKit
 
 class AllListsViewController: UITableViewController {
-    var dataModel: DataModel!
+    
+   var dataModel: DataModel!
+    //as if now we are using the data model in plist format.In future we can change the data model by  a protocol
+    
     
     override func viewWillAppear(_ animated: Bool) {
+        
         super.viewWillAppear(animated)
         tableView.reloadData()
     }
     
     override func viewDidAppear(_ animated: Bool) {
+        
         super.viewDidAppear(animated)
         navigationController?.delegate = self
+        
         let index = dataModel.indexOfSelectedChecklist
+        
         if index >= 0 && index < dataModel.lists.count {
             let checklist = dataModel.lists[index]
-            performSegue(withIdentifier: SegueIdentifiers.ShowChecklist.rawValue, sender: checklist)
+            performSegue(withIdentifier: SegueIdentifiers.ShowChecklist, sender: checklist)
         }
     }
     
@@ -31,13 +38,10 @@ class AllListsViewController: UITableViewController {
 extension AllListsViewController {
     
     func makeCell(for tableView: UITableView) -> UITableViewCell {
-        let cellIdentifier = CellIdentifiers.AllList.rawValue
-        if let cell =
-            tableView.dequeueReusableCell(withIdentifier: cellIdentifier) {
-            return cell
-        } else {
-            return UITableViewCell(style: .subtitle, reuseIdentifier: cellIdentifier)
-        }
+        
+        let cellIdentifier = CellIdentifiers.AllList
+        let cell =  tableView.dequeueReusableCell(withIdentifier: cellIdentifier)
+        return cell ?? UITableViewCell(style: .subtitle, reuseIdentifier: cellIdentifier)
     }
 }
 
@@ -52,24 +56,24 @@ extension AllListsViewController {
         let cell = makeCell(for: tableView)
         // Update cell informaiton
         let checklist = dataModel.lists[indexPath.row]
-        cell.textLabel!.text = checklist.name
+        cell.textLabel?.text = checklist.name
         cell.accessoryType = .detailDisclosureButton
         let count = checklist.countUncheckedItems()
         if checklist.items.count == 0 {
-            cell.detailTextLabel!.text = Subtitle.None.rawValue
+            cell.detailTextLabel?.text = Subtitle.None
         } else if count == 0 {
-            cell.detailTextLabel!.text = Subtitle.AllDone.rawValue
+            cell.detailTextLabel?.text = Subtitle.AllDone
         } else {
-            cell.detailTextLabel!.text = "\(count) Remaining"
+            cell.detailTextLabel?.text = "\(count) Remaining"
         }
-        cell.imageView!.image = UIImage(named: checklist.iconName)
+        cell.imageView?.image = UIImage(named: checklist.iconName)
         return cell
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         dataModel.indexOfSelectedChecklist = indexPath.row
         let checklist = dataModel.lists[indexPath.row]
-        performSegue(withIdentifier: SegueIdentifiers.ShowChecklist.rawValue, sender: checklist)
+        performSegue(withIdentifier: SegueIdentifiers.ShowChecklist, sender: checklist)
     }
     
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
@@ -81,9 +85,10 @@ extension AllListsViewController {
     
     override func tableView(_ tableView: UITableView, accessoryButtonTappedForRowWith indexPath: IndexPath) {
         
-        let controller = storyboard!.instantiateViewController(withIdentifier: ControllerIdentifier.ListDetail.rawValue) as! ListDetailViewController
+        guard let controller = storyboard?.instantiateViewController(withIdentifier: ControllerIdentifier.ListDetail) as? ListDetailViewController else {
+            return
+        }
         controller.delegate = self
-        
         let checklist = dataModel.lists[indexPath.row]
         controller.checklistToEdit = checklist
         navigationController?.pushViewController(controller, animated: true)
@@ -93,18 +98,27 @@ extension AllListsViewController {
     // MARK:- Navigation
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == SegueIdentifiers.ShowChecklist.rawValue {
+        
+        switch segue.identifier {
+            
+        case SegueIdentifiers.ShowChecklist :
+            
             let controller = segue.destination as? ChecklistViewController
             controller?.checklist = sender as? Checklist
-        } else if segue.identifier == SegueIdentifiers.AddChecklist.rawValue {
+            
+        case SegueIdentifiers.AddChecklist:
+            
             let controller = segue.destination as? ListDetailViewController
             controller?.delegate = self
+            
+        default:
+            break
         }
     }
 }
 
 
-extension AllListsViewController:ListDetailViewControllerDelegate {
+extension AllListsViewController: ListDetailViewControllerDelegate {
     // MARK:- List Detail View Controller Delegates
     
     func listDetailViewControllerDidCancel(_ controller: ListDetailViewController) {
@@ -126,7 +140,6 @@ extension AllListsViewController:ListDetailViewControllerDelegate {
     
     
 }
-
 
 
 extension AllListsViewController:UINavigationControllerDelegate {

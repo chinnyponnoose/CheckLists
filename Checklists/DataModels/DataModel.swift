@@ -8,6 +8,11 @@
 
 import Foundation
 
+enum CodableError :Error {
+    case codingError
+    case decodingError
+}
+
 class DataModel {
     var lists = [Checklist]()
     var indexOfSelectedChecklist: Int {
@@ -41,8 +46,10 @@ class DataModel {
         do {
             let data = try encoder.encode(lists)
             try data.write(to: dataFilePath(), options: Data.WritingOptions.atomic)
-        } catch {
+        } catch CodableError.codingError{
             print("Error encoding item array!")
+        } catch  {
+            
         }
     }
     

@@ -16,6 +16,7 @@ class ChecklistCell :UITableViewCell {
 }
 
 class ChecklistViewController: UITableViewController {
+    
     var checklist: Checklist!
     
     override func viewDidLoad() {
@@ -23,16 +24,12 @@ class ChecklistViewController: UITableViewController {
         title = checklist.name
     }
     
-    
     func configureCheckmark(for cell: ChecklistCell,
                             with item: ChecklistItem) {
         
         cell.checkLabel.textColor = view.tintColor
-        if item.checked {
-            cell.checkLabel.text = "√"
-        } else {
-            cell.checkLabel.text = ""
-        }
+        cell.checkLabel.text = item.checked ? "√" : ""
+        
     }
     
     func configureText(for cell: ChecklistCell,
@@ -40,6 +37,7 @@ class ChecklistViewController: UITableViewController {
         cell.listNameLabel.text = item.text
     }
 }
+
 extension ChecklistViewController {
     // MARK:- TableView Delegates
     
@@ -50,7 +48,7 @@ extension ChecklistViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cell = tableView.dequeueReusableCell(
-            withIdentifier: CellIdentifiers.CheckList.rawValue, for: indexPath) as! ChecklistCell
+            withIdentifier: CellIdentifiers.CheckList, for: indexPath) as! ChecklistCell
         let item = checklist.items[indexPath.row]
         configureText(for: cell, with: item)
         configureCheckmark(for: cell, with: item)
@@ -58,6 +56,7 @@ extension ChecklistViewController {
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
         if let cell = tableView.cellForRow(at: indexPath)  as? ChecklistCell{
             let item = checklist.items[indexPath.row]
             item.toggleChecked()
@@ -67,6 +66,7 @@ extension ChecklistViewController {
     }
     
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+        
         checklist.items.remove(at: indexPath.row)
         let indexPaths = [indexPath]
         tableView.deleteRows(at: indexPaths, with: .automatic)
@@ -76,16 +76,26 @@ extension ChecklistViewController {
     // MARK:- Navigation
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == SegueIdentifiers.AddItem.rawValue{
+        
+        switch segue.identifier {
+            
+        case SegueIdentifiers.AddItem :
+            
             let controller = segue.destination as? ItemDetailViewController
             controller?.delegate = self
-        } else if segue.identifier == SegueIdentifiers.EditItem.rawValue {
+            
+        case SegueIdentifiers.EditItem:
+            
             let controller = segue.destination as? ItemDetailViewController
             controller?.delegate = self
             if let indexPath = tableView.indexPath(for: sender as! UITableViewCell) {
                 controller?.itemToEdit = checklist.items[indexPath.row]
             }
+            
+        default:
+            break
         }
+        
     }
 }
 
