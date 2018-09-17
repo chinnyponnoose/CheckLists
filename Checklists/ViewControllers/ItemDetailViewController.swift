@@ -27,7 +27,7 @@ class ItemDetailViewController: UITableViewController {
     var itemToEdit: ChecklistItem?
     var dueDate = Date()
     var datePickerVisible = false
-    private let tableRowHeight = 217
+    fileprivate let tableRowHeight = 217
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -129,7 +129,8 @@ class ItemDetailViewController: UITableViewController {
             tableView.endUpdates()
         }
     }
-    
+}
+    extension ItemDetailViewController {
     // MARK:- TableView Delegates
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if section == 1 && datePickerVisible {
@@ -183,8 +184,9 @@ class ItemDetailViewController: UITableViewController {
         }
     }
 }
-    // MARK:- UITextField Delegates
+
     extension ItemDetailViewController :UITextFieldDelegate {
+       // MARK:- UITextField Delegates
         
     func textField(_ textField: UITextField,
                    shouldChangeCharactersIn range: NSRange,

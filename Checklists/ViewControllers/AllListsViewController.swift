@@ -26,16 +26,9 @@ class AllListsViewController: UITableViewController {
         }
     }
     
-    // MARK:- Navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == SegueIdentifiers.ShowChecklist.rawValue {
-            let controller = segue.destination as! ChecklistViewController
-            controller.checklist = sender as! Checklist
-        } else if segue.identifier == SegueIdentifiers.AddChecklist.rawValue {
-            let controller = segue.destination as! ListDetailViewController
-            controller.delegate = self
-        }
-    }
+}
+
+extension AllListsViewController {
     
     func makeCell(for tableView: UITableView) -> UITableViewCell {
         let cellIdentifier = CellIdentifiers.AllList.rawValue
@@ -46,8 +39,11 @@ class AllListsViewController: UITableViewController {
             return UITableViewCell(style: .subtitle, reuseIdentifier: cellIdentifier)
         }
     }
+}
+
+extension AllListsViewController {
+    // MARK: - Table view data source and delegates
     
-    // MARK: - Table view data source
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return dataModel.lists.count
     }
@@ -93,9 +89,23 @@ class AllListsViewController: UITableViewController {
         navigationController?.pushViewController(controller, animated: true)
     }
 }
-// MARK:- List Detail View Controller Delegates
+extension AllListsViewController {
+    // MARK:- Navigation
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == SegueIdentifiers.ShowChecklist.rawValue {
+            let controller = segue.destination as? ChecklistViewController
+            controller?.checklist = sender as? Checklist
+        } else if segue.identifier == SegueIdentifiers.AddChecklist.rawValue {
+            let controller = segue.destination as? ListDetailViewController
+            controller?.delegate = self
+        }
+    }
+}
+
 
 extension AllListsViewController:ListDetailViewControllerDelegate {
+    // MARK:- List Detail View Controller Delegates
     
     func listDetailViewControllerDidCancel(_ controller: ListDetailViewController) {
         navigationController?.popViewController(animated: true)
@@ -114,12 +124,13 @@ extension AllListsViewController:ListDetailViewControllerDelegate {
         navigationController?.popViewController(animated: true)
     }
     
-
+    
 }
 
-// MARK:- UINavigationController Delegate
+
 
 extension AllListsViewController:UINavigationControllerDelegate {
+    // MARK:- UINavigationController Delegate
     
     func navigationController(_ navigationController: UINavigationController, willShow viewController: UIViewController, animated: Bool) {
         if viewController === self {

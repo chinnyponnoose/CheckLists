@@ -9,7 +9,7 @@
 import UIKit
 
 class ChecklistCell :UITableViewCell {
-
+    
     @IBOutlet weak var listNameLabel: UILabel!
     @IBOutlet weak var checkLabel: UILabel!
     
@@ -17,25 +17,12 @@ class ChecklistCell :UITableViewCell {
 
 class ChecklistViewController: UITableViewController {
     var checklist: Checklist!
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         title = checklist.name
     }
     
-    // MARK:- Navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == SegueIdentifiers.AddItem.rawValue{
-            let controller = segue.destination as! ItemDetailViewController
-            controller.delegate = self
-        } else if segue.identifier == SegueIdentifiers.EditItem.rawValue {
-            let controller = segue.destination as! ItemDetailViewController
-            controller.delegate = self
-            if let indexPath = tableView.indexPath(for: sender as! UITableViewCell) {
-                controller.itemToEdit = checklist.items[indexPath.row]
-            }
-        }
-    }
     
     func configureCheckmark(for cell: ChecklistCell,
                             with item: ChecklistItem) {
@@ -52,7 +39,8 @@ class ChecklistViewController: UITableViewController {
                        with item: ChecklistItem) {
         cell.listNameLabel.text = item.text
     }
-    
+}
+extension ChecklistViewController {
     // MARK:- TableView Delegates
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return checklist.items.count
@@ -83,12 +71,25 @@ class ChecklistViewController: UITableViewController {
         tableView.deleteRows(at: indexPaths, with: .automatic)
     }
 }
-
-
-// MARK:- ItemDetailViewController Delegates
+extension ChecklistViewController {
+    // MARK:- Navigation
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == SegueIdentifiers.AddItem.rawValue{
+            let controller = segue.destination as? ItemDetailViewController
+            controller?.delegate = self
+        } else if segue.identifier == SegueIdentifiers.EditItem.rawValue {
+            let controller = segue.destination as? ItemDetailViewController
+            controller?.delegate = self
+            if let indexPath = tableView.indexPath(for: sender as! UITableViewCell) {
+                controller?.itemToEdit = checklist.items[indexPath.row]
+            }
+        }
+    }
+}
 
 extension ChecklistViewController:ItemDetailViewControllerDelegate {
-
+    // MARK:- ItemDetailViewController Delegates
+    
     func itemDetailViewControllerDidCancel(_ controller: ItemDetailViewController) {
         navigationController?.popViewController(animated:true)
     }

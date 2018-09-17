@@ -41,14 +41,7 @@ class ListDetailViewController: UITableViewController {
         super.viewWillAppear(animated)
         textField.becomeFirstResponder()
     }
-    
-    // MARK:- Navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == SegueIdentifiers.PickItem.rawValue {
-            let controller = segue.destination as! IconPickerViewController
-            controller.delegate = self
-        }
-    }
+
     
     // MARK:- Actions
     @IBAction func cancel() {
@@ -96,4 +89,14 @@ class ListDetailViewController: UITableViewController {
         iconImageView.image = UIImage(named: iconName)
         navigationController?.popViewController(animated: true)
     }
+}
+
+extension ListDetailViewController {
+// MARK:- Navigation
+override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+    if segue.identifier == SegueIdentifiers.PickItem.rawValue {
+        let controller = segue.destination as? IconPickerViewController
+        controller?.delegate = self
+    }
+}
 }
