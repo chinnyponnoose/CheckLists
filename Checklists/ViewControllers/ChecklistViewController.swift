@@ -42,6 +42,7 @@ class ChecklistViewController: UITableViewController {
 }
 extension ChecklistViewController {
     // MARK:- TableView Delegates
+    
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return checklist.items.count
     }
@@ -73,6 +74,7 @@ extension ChecklistViewController {
 }
 extension ChecklistViewController {
     // MARK:- Navigation
+    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == SegueIdentifiers.AddItem.rawValue{
             let controller = segue.destination as? ItemDetailViewController
